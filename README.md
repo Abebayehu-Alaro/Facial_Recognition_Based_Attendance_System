@@ -7,7 +7,7 @@ And if you like this project then ADD a STAR ⭐️  to this project 👆
 
 ## Features of this Project
 
-The proposed system is expected to provide student attendance system-related functionalities 
+This system is expected to provide student attendance system-related functionalities 
 like marking attendance using face recognition and making the report for the recorded 
 attendance. For a better understanding of our system, we divided the functionalities of our 
 system by modules. The proposed system is expected to provide the following services.
