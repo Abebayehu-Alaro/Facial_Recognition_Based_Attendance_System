@@ -11,7 +11,7 @@ The proposed system is expected to provide student attendance system-related fun
 like marking attendance using face recognition and making the report for the recorded 
 attendance. For a better understanding of our system, we divided the functionalities of our 
 system by modules. The proposed system is expected to provide the following services.
-###Admin Module / Super Administrator
+### Admin Module / Super Administrator
 1. The system shall allow the admin to enter all the new users’ (students, lecturers, 
 department heads, and admins) information. 
 2. The system shall allow the admin to delete the users(student/s, lecturer/s, department 
