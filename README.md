@@ -29,11 +29,11 @@ basic attendance settings like Late Time (Mins), Beginning/Ending In Time, etc.
 9. The system shall allow the admin to view the attendance tracking status of the system.
 10. The system shall allow the admin to log into and log out from the system.
 11. The system shall enable the admin to update their profiles.
-###Student Module
+### Student Module
 1. The system shall allow the students to view their attendance status of the specific course.
 2. The system shall allow the students to log into and log out from the system.
 3. The system shall enable the students to update their profiles.
-###The Department Head Module / Department Administrator
+### The Department Head Module / Department Administrator
 1. The system should allow the Head to view his/her students’ attendance status.
 2. The system should allow the Head to register courses’ information.
 3. The system should allow the Head to register students for the specific courses.
@@ -45,7 +45,7 @@ due to the special case that made the instructor cease instructing that course/c
 7. The system should allow the Head to set up the schedule for the specific course.
 8. The system shall allow the Head to log into and log out from the system.
 9. The system shall enable the Head to update his/her profile.
-###Instructor Module
+### Instructor Module
 1. The system shall allow the Academic Staff to configure the basic settings for the 
 attendance that is going to be taken.
 2. The system shall allow the Academic Staff to initiate the attendance tracking of the 
@@ -58,7 +58,7 @@ he/she instructs.
 students.
 6. The system shall allow the Academic Staff to log into and log out from the system.
 7. The system shall enable the Head to update his/her profile.
-###Report Module
+### Report Module
 1. The system shall generate the Daily Attendance Statistical Report that lists the definite 
 section daily attendance status for the specific course in the assigned time in the table.
 Viewers: Instructor, Head of the Department, and Admin
