@@ -1,0 +1,172 @@
+{% extends 'head_template/base_template.html' %}
+
+{% block page_title %}
+    Edit Assign Instructor For Course  | #ID : {{ assignInstructors.id }}
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Edit Assign Instructor For Course</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form role="form" method="POST" action="{% url 'edit_assign_instructor_save' %}">
+                        {% csrf_token %}
+
+                        
+                                {% comment %} Display Messages {% endcomment %}
+                                {% if messages %}
+                                <div class="form-group">
+                                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+                            
+
+                        <div class="card-body">
+
+
+                            <div class="form-group">
+                                <label>Batch </label>
+                                <select class="form-control" name="batch" id="batch">
+                                    {% for batch in batchinfos %}
+                                        <option value="{{ batch }}" {% if batch == assignInstructors.batch %} selected {% endif %}>{{ batch }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+                           <div class="form-group">
+                                <label>Section </label>
+                                <select class="form-control" name="section" id="section">
+                                    {% for section in sections %}
+                                        <option value="{{ section }}" {% if section == assignInstructors.section %} selected {% endif %}>{{ section }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+<!--                             <div class="form-group">-->
+<!--                                <label>Subject </label>-->
+<!--                                <select class="form-control" name="subject">-->
+<!--                                    {% for subject in subjects %}-->
+<!--                                        <option value="{{ subject.id }}" {% if subject.id == assignInstructors.subject_id.id %} selected {% endif %}>{{ subject.subject_name }}</option>-->
+<!--                                    {% endfor %}-->
+<!--                                </select>-->
+<!--                            </div>-->
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <select class="form-control" name="subject" id="subject">
+                                    <option selected disabled>-- choose a section first--</option>
+                                </select>
+                            </div>
+
+                             <div class="form-group">
+                                <label>Class Type: </label>
+                                <select class="form-control" name="class_type" id="class_type">
+                                    <option value="{{ assignInstructors.class_type }} selected">{{ assignInstructors.class_type }}</option>
+                                    <option value="lecture_class">Lecture Class</option>
+                                    <option value="lab_class">Lab Class</option>
+                                    <option value="both_class">Both Class</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Instructor </label>
+                                <select class="form-control" name="staff">
+                                    {% for staff in staffs %}
+                                        <option value="{{ staff.id }}" {% if staff.id == assignInstructors.staff_id.id %} selected {% endif %}>{{ staff.admin.first_name }} {{ staff.admin.last_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+                            <div class="form-group">
+
+                                <input type="hidden" name="assign_instructor" value="{{ assignInstructors.id }}" />
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                        
+                        <button type="submit" class="btn btn-primary">Update Register For Course</button>
+                        </div>
+                    </form>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+
+{% block custom_js %}
+<script>
+
+</script>
+<script>
+    $("#section").change(function () {
+        const section = $(this).val();  // get the selected college ID from the HTML dropdown list
+        var batch = $("#batch").val();  // get the selected college ID from the HTML dropdown list
+        $.ajax({                       // initialize an AJAX request
+            type: "POST",
+            url: '{% url "load_subjects_section_batch" %}',
+            data: {
+                'batch': batch, // add the batch to the POST parameters
+                'section': section
+                 }
+             })
+
+             .done(function(response){
+                var json_data=JSON.parse(response);
+                console.log(json_data)
+                //Displaying Subjects List
+                var div_data='';
+                for(key in json_data)
+                {
+                    div_data+="<option value='"+ json_data[key]['id'] +"'>"+ json_data[key]['name']+" </option>";
+
+                }
+                $("#subject").html(div_data);
+
+            })
+            .fail(function(){
+                alert("Error in Fetching Subjects.")
+            })
+        });
+</script>
+  {% endblock custom_js %}

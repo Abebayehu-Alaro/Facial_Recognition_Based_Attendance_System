@@ -1,0 +1,279 @@
+{% extends 'head_template/base_template.html' %}
+
+{% block page_title %}
+   Register For Course
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Register For Course</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <!--form role="form" method="POST" action="{% url 'register_for_course_save' %}"-->
+                        {% csrf_token %}
+
+                        
+                                {% comment %} Display Messages {% endcomment %}
+                                {% if messages %}
+                                <div class="form-group">
+                                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+                            
+
+                        <div class="card-body">
+
+
+
+                            <div class="form-group">
+                                <label>Department </label>
+                                <select class="form-control" name="department" id="department">
+                                    <option value="{{ head.department_id.id }}">{{ head.department_id.department_name }}</option>
+                                    {% for department in departments %}
+                                    {% if department.id != head.department_id.id %}
+                                        <option value="{{ department.id }}">{{ department.department_name }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Curriculum Name </label>
+                                <select class="form-control" name="curricclum" id="curricclum">
+                                    <option selected disabled>Choose a Curriculum</option>
+                                    <option value="old">Old Curriclum</option>
+                                    <option value="new">New Curriclum</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Semester </label>
+                                <select class="form-control" name="semester" id="semester">
+                                    <option selected disabled>Choose a curriculum first</option>
+                                    <option value="1">First Semester</option>
+                                    <option value="2">Second Semester</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Section</label>
+                                <select class="form-control" name="section" id="section">
+                                    {% for section in sections %}
+                                    <option value="{{section}}">{{ section }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Batch </label>
+                                <select class="form-control" name="batch" id="batch">
+                                    <option selected disabled>Choose a Semester first</option>
+                                    {% for batchinfo in batchinfos %}
+                                    <option value="{{batchinfo}}">{{ batchinfo }}</option>
+                                    {% endfor %}
+                                </select>
+                             </div>
+
+                            <div class="form-group">
+                             <label>Subject </label>
+                             <div id="subject">
+                                 <select class="form-control" name="prompt">
+                                    <option selected disabled>Choose a Batch first</option>
+                                </select>
+                             </div>
+                             </div>
+
+                              <div class="form-group">
+                             <label>Students </label>
+                             <div id="student">
+                                 <select class="form-control" name="prompt">
+                                    <option selected disabled>Choose a Batch first</option>
+                                </select>
+                             </div>
+                             </div>
+
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+
+                        <button type="submit" class="btn btn-primary" id="save_data"> Register for Course </button>
+
+                        </div>
+                    <!--/form-->
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+{% block custom_js %}
+<script>
+$("#batch").change(function () {
+        const batch = $(this).val();
+        var curricclum = $("#curricclum").val();
+        var department = $("#department").val();
+        var section = $("#section").val();
+        var semester = $("#semester").val();
+
+        $.ajax({
+            type: "POST",
+            url: '{% url "head_load_subjects" %}',
+            data: {
+                'curricclum': curricclum ,// add the college id to the POST parameters
+                'semester': semester,
+                'batch': batch
+                 }
+             })
+
+             .done(function(response){
+                var json_data=JSON.parse(response);
+                console.log(json_data)
+                //Displaying Subject List
+                div_data="<div class='form-group'><div class='row'>"
+                for(key in json_data)
+                {
+                    div_data+="<div class='col-lg-2'><div class='form-check'><input type='checkbox' checked='checked' name='subject[]' value='"+ json_data[key]['id'] +"' />  <label class='form-check-label'>"+ json_data[key]['name']+" </label></div></div>";
+                }
+                div_data+="</div></div>";
+                $("#subject").html(div_data);
+
+            })
+            .fail(function(){
+                alert("Error in Fetching Subjects.")
+            })
+
+           $.ajax({
+            type: "POST",
+            url: '{% url "head_get_students" %}',
+            data: {
+               'department': department,
+                'section': section,
+                'batch': batch
+                 }
+             })
+             .done(function(response){
+                var json_data=JSON.parse(response);
+                console.log(json_data)
+                //Displaying Student List
+                div_data="<div class='form-group'><div class='row'>"
+                for(key in json_data)
+                {
+                    div_data+="<div class='col-lg-2'><div class='form-check'><input type='checkbox' checked='checked' name='student[]' value='"+ json_data[key]['id'] +"' />  <label class='form-check-label'>"+ json_data[key]['name']+" </label></div></div>";
+                }
+                div_data+="</div></div>";
+                $("#student").html(div_data);
+
+            })
+            .fail(function(){
+                alert("Error in Fetching Students.")
+            })
+        });
+
+        // Save Attendance Data to Database
+       $("#save_data").click(function(){
+
+                //Disabling the Button while data is being saved in Server
+                $(this).attr("disabled", "disabled")
+                $(this).text("Registering Data...")
+
+                //console.log("SAVE")
+                var subject=$("input[name='subject[]'").map(function(){
+                        if($(this).is(":checked")){
+                            return {"id":$(this).val(), "status":1}; // Getting ID and Value of Students
+                        }
+                        else
+                        {
+                            return {"id":$(this).val(), "status":0}; // Getting ID and Value of Students
+                        }
+                    }).get()
+
+               var student=$("input[name='student[]'").map(function(){
+                    if($(this).is(":checked")){
+                        return {"id":$(this).val(), "status":1}; // Getting ID and Value of Students
+                    }
+                    else
+                    {
+                        return {"id":$(this).val(), "status":0}; // Getting ID and Value of Students
+                    }
+                    }).get()
+
+                var curricclum=$("#curricclum").val();
+                var semester=$("#semester").val();
+                //var student=$("#student").val();
+                var department_id=$("#department").val();
+                var section=$("#section").val();
+                var batch=$("#batch").val();
+                //console.log(attendance_date)
+                //console.log(student_data);
+                subject = JSON.stringify(subject)
+                student = JSON.stringify(student)
+
+                // Registering students into Database
+
+                $.ajax({
+                    url:'{% url 'register_for_course_save' %}',
+                    type:'POST',
+                    data:{subject:subject, student:student, curricclum:curricclum, section:section, batch:batch, student:student,  department:department_id,  semester:semester},
+                })
+                .done(function(response){
+
+                    if(response=="OK")
+                    {
+                        alert("Students Registered Successfully!")
+                    }
+                    else if (response=="existed")
+                    {
+                        alert("Already Registered!")
+                    }
+                    else
+                    {
+                        alert("Failed to Register Students!")
+                    }
+                    location.reload()
+
+                    //console.log(response)
+                })
+
+                .fail(function(){
+                    alert("There is an Error in Registering Students!")
+                })
+
+            });
+
+  </script>
+  {% endblock custom_js %}
