@@ -103,16 +103,11 @@ Viewers: Instructor, Head of the Department, and Admin
 
 **2. Create a Virtual Environment and Activate**
 
-Install Virtual Environment First
-```
-$  pip install virtualenv
-```
-
 Create Virtual Environment
 
 For Windows
 ```
-$  python -m venv venv
+$  conda create -n venv venv
 ```
 For Mac
 ```
@@ -123,7 +118,7 @@ Activate Virtual Environment
 
 For Windows
 ```
-$  source venv/scripts/activate
+$  conda activate venv
 ```
 
 For Mac
@@ -134,12 +129,12 @@ $  source venv/bin/activate
 
 **4. Clone this project**
 ```
-$  git clone https://github.com/vijaythapa333/django-student-management-system.git
+$  git clone https://github.com/Abebayehu-Alaro/Facial_Recognition_Based_Attendance_System.git
 ```
 
 Then, Enter the project
 ```
-$  cd django-student-management-system
+$  cd Facial_Recognition_Based_Attendance_System
 ```
 
 **5. Install Requirements from 'requirements.txt'**
